@@ -1,6 +1,7 @@
 #include <iostream>
 #include <math.h>
 #include <vector>
+#include <map>
 
 
 double IRR(std::vector<double> cf)
@@ -29,7 +30,7 @@ double IRR(std::vector<double> cf)
   };
 
   while(true){
-    r1 = r0 - fx(cf, r0) / df(cf, r0);
+    r1 = r0 - 0.1*fx(cf, r0) / df(cf, r0);
     if(abs(r1 - r0) < pow(10,-3)){
       break;
     }
@@ -39,11 +40,3 @@ double IRR(std::vector<double> cf)
 }
 
 
-
-int main()
-{
-  double irr = IRR({-200.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0});
-  std::cout << irr << std::endl;
-
-  return 0;
-}
