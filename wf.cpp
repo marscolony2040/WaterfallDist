@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <string.h>
+#include <math.h>
 #include "irr.cpp"
 
 double cash(double inv, std::vector<double> ca, double r)
@@ -95,7 +97,7 @@ int main()
   
     std::vector<int> hurdle_find = find_hurdle(hurdles, _IRR);
     
-    int old_f = -1;
+    int old_f = 1;
     int hf = 0;
     int hi = 0;
 
@@ -109,6 +111,9 @@ int main()
             cash_flow.push_back(frame[g][0]);
         }
         if(old_f != f){
+            for(int i = old_f; i < f; ++i){
+                frame[i][hf+1] = frame[i][hf]; 
+            }
             frame[f][hf+1] = cash(frame[0][0], cash_flow, hurdles[hi]);
         } else {
             double totalz = 0;
@@ -129,8 +134,11 @@ int main()
         old_f = f;
     }
 
+    int ii = 0;
+
     std::cout << std::endl;
     std::cout << "Waterfall Distribution" << std::endl;
+    
     std::cout << std::endl;
     for(auto & t : frame){
         for(auto & u : t){
@@ -139,6 +147,6 @@ int main()
         std::cout << std::endl;
     }
     
-
+    std::cout << std::endl;
     return 0;
 }
