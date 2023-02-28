@@ -42,7 +42,7 @@ std::vector<std::vector<double>> transpose(std::vector<std::vector<double>> x)
     return hold;
 }
 
-std::vector<std::vector<double>> setting(std::vector<double> cs, int herd)
+std::vector<std::vector<double>> setting(std::vector<double> cs, std::vector<double> bs, int herd)
 {
     std::vector<std::vector<double>> data;
     std::vector<double> temp;
@@ -60,6 +60,12 @@ std::vector<std::vector<double>> setting(std::vector<double> cs, int herd)
         }
         data.push_back(temp);
     }
+    temp.clear();
+    temp.push_back(0);
+    for(auto & yy : bs){
+        temp.push_back(yy);
+    }
+    data.push_back(temp);
     return data;
 }
 
@@ -84,15 +90,16 @@ double irr(std::vector<double> cf)
 
 int main()
 {
-    std::vector<double> cf = {-150, 20, 30, 80, 40, 50, 60, 70, 80, 90, 100};
+    std::vector<double> cf = {-150, 20, 30, 80, 40, 50, 60, 70, 80, 90, 100, 150};
     std::vector<double> hurdles = {0.01, 0.05, 0.10, 0.15, 0.24};
     std::vector<double> _IRR;
 
-    std::vector<std::vector<double>> frame = transpose(setting(cf, hurdles.size()));
 
     for(int i = 2; i <= cf.size(); ++i){
         _IRR.push_back(irr({cf.begin(), cf.begin() + i}));
     }
+
+    std::vector<std::vector<double>> frame = transpose(setting(cf, _IRR, hurdles.size()));
 
   
     std::vector<int> hurdle_find = find_hurdle(hurdles, _IRR);
@@ -138,7 +145,28 @@ int main()
 
     std::cout << std::endl;
     std::cout << "Waterfall Distribution" << std::endl;
-    
+    std::cout << std::endl;
+
+    for(int q = 0; q < frame[0].size() - 1; ++q){
+        if(q % 2 == 0){
+            std::cout << "Cash\t";
+        } else {
+            std::cout << "Split\t";
+        }
+    }
+    std::cout << std::endl;
+    for(int q = 0; q < frame[0].size() - 1; ++q){
+        if(q % 2 == 0){
+            std::cout << "Left\t";
+        } else {
+            std::cout << hurdles[ii] << "\t";
+            ii += 1;
+        }
+    }
+    std::cout << "IRR" << std::endl;
+    for(int q = 0; q < frame[0].size(); ++q){
+        std::cout << "\t";
+    }
     std::cout << std::endl;
     for(auto & t : frame){
         for(auto & u : t){
